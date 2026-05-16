@@ -3,6 +3,8 @@ import cors from "cors";
 import dotenv from "dotenv";
 import connectDB from "./config/db";
 import { errorHandler } from "./middleware/errorHandler";
+import authRoutes from "./routes/authRoutes";
+import leadRoutes from "./routes/leadRoutes";
 
 dotenv.config();
 connectDB();
@@ -16,9 +18,8 @@ app.get("/api/health", (req, res) => {
   res.json({ success: true, message: "GigFlow API is running" });
 });
 
-// Routes (we'll add these next)
-// app.use('/api/auth', authRoutes);
-// app.use('/api/leads', leadRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/leads", leadRoutes);
 
 app.use(errorHandler);
 
