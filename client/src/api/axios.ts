@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+  baseURL: import.meta.env.VITE_API_URL || "http://localhost:5000/api",
 });
 
 // Attach token to every request automatically
@@ -13,7 +13,7 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Handle 401 globally — token expired or invalid
+// Handle 401 globally - token expired or invalid
 api.interceptors.response.use(
   (response) => response,
   (error) => {

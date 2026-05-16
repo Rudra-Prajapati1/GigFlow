@@ -1,3 +1,4 @@
+import axios from "axios";
 import api from "./axios";
 import type { ApiResponse, Lead, LeadFilters } from "../types";
 
@@ -10,6 +11,17 @@ export interface LeadsResponse {
     totalPages: number;
   };
 }
+
+interface ErrorResponse {
+  message?: string;
+}
+
+const getAxiosMessage = (error: unknown, fallback: string): string => {
+  if (axios.isAxiosError<ErrorResponse>(error)) {
+    return error.response?.data?.message || fallback;
+  }
+  return fallback;
+};
 
 export const getLeads = async (
   filters: Partial<LeadFilters>,
@@ -31,16 +43,34 @@ export const getLeads = async (
 export const createLead = async (
   data: Omit<Lead, "_id" | "createdBy" | "createdAt" | "updatedAt">,
 ): Promise<Lead> => {
-  const res = await api.post<ApiResponse<Lead>>("/leads", data);
-  return res.data.data!;
+  try {
+    const res = await api.post<ApiResponse<Lead>>("/leads", data);
+    return res.data.data!;
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(getAxiosMessage(error, "Request failed"), {
+        cause: error,
+      });
+    }
+    throw error;
+  }
 };
 
 export const updateLead = async (
   id: string,
   data: Partial<Lead>,
 ): Promise<Lead> => {
-  const res = await api.put<ApiResponse<Lead>>(`/leads/${id}`, data);
-  return res.data.data!;
+  try {
+    const res = await api.put<ApiResponse<Lead>>(`/leads/${id}`, data);
+    return res.data.data!;
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(getAxiosMessage(error, "Request failed"), {
+        cause: error,
+      });
+    }
+    throw error;
+  }
 };
 
 export const deleteLead = async (id: string): Promise<void> => {
