@@ -77,8 +77,17 @@ export const deleteLead = async (id: string): Promise<void> => {
   await api.delete(`/leads/${id}`);
 };
 
-export const exportLeads = (): void => {
-  const token = localStorage.getItem("token");
-  const baseURL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
-  window.open(`${baseURL}/leads/export?token=${token}`, "_blank");
+export const exportLeads = async (): Promise<void> => {
+  const res = await api.get("/leads/export", {
+    responseType: "blob",
+  });
+
+  const url = window.URL.createObjectURL(new Blob([res.data]));
+  const link = document.createElement("a");
+  link.href = url;
+  link.setAttribute("download", "leads.csv");
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  window.URL.revokeObjectURL(url);
 };

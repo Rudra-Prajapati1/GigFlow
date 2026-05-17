@@ -97,6 +97,14 @@ const DashboardPage = () => {
     setIsDeleteModalOpen(true);
   };
 
+  const handleExport = async () => {
+    try {
+      await exportLeads();
+    } catch {
+      setError("Failed to export leads.");
+    }
+  };
+
   const handleLeadSubmit = async (data: Partial<Lead>) => {
     if (editingLead) {
       await updateLead(editingLead._id, data);
@@ -150,7 +158,7 @@ const DashboardPage = () => {
         <LeadFiltersBar
           filters={filters}
           onFilterChange={handleFilterChange}
-          onExport={exportLeads}
+          onExport={handleExport}
           onAddLead={handleAddLead}
         />
 

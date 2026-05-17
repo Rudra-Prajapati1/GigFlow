@@ -9,15 +9,21 @@ interface AuthData {
 
 interface ErrorResponse {
   message?: string;
+  errors?: { msg: string }[];
 }
 
 const getAxiosMessage = (error: unknown, fallback: string): string => {
   if (axios.isAxiosError<ErrorResponse>(error)) {
-    return error.response?.data?.message || fallback;
+    const data = error.response?.data;
+    // express-validator validation errors array
+    if (data?.errors && data.errors.length > 0) {
+      return data.errors[0].msg;
+    }
+    // general error message
+    return data?.message || fallback;
   }
   return fallback;
 };
-
 export const registerUser = async (
   name: string,
   email: string,

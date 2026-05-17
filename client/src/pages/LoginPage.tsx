@@ -22,6 +22,7 @@ const LoginPage = () => {
       login(data.token, data.user);
       navigate("/dashboard");
     } catch (err: unknown) {
+      console.log(err);
       const message =
         err instanceof Error ? err.message : "Invalid credentials";
       setError(message);
