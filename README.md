@@ -2,6 +2,11 @@
 
 A full-stack Lead Management Dashboard built with the MERN stack and TypeScript, featuring JWT authentication, role-based access control, advanced filtering, and a clean responsive UI.
 
+## Live Demo
+
+- **Frontend:** https://gigflow-smartlead.netlify.app/
+- **Backend API:** https://gigflow-server-qwoq.onrender.com/api/health
+
 ## Tech Stack
 
 | Layer    | Technologies                            |
